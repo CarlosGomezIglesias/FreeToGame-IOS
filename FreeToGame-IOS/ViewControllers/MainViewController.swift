@@ -7,11 +7,16 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        Task {
+            let result = await GameService.getGamesList()
+            print(result)
+        }
     }
 
 
