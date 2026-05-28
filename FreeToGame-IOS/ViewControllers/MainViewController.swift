@@ -7,17 +7,62 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, UITableViewDataSource, UISearchBarDelegate{
 
+    @IBOutlet weak var tableView: UITableView!
+    var gameList: [Game] = []
+    var originalGameList: [Game] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        tableView.dataSource = self
+        
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "Search Game..."
+        navigationItem.searchController = searchController
+        
+        //llamada a la api
         Task {
-            let result = await GameService.getGamesList()
-            print(result)
+            originalGameList = await GameService.getGamesList()
+            gameList = originalGameList
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return gameList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let game = gameList[indexPath.row]                                                      // el "as" es como decirle que lo vea como                                                                                      un GameViewCell no como un tableView
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Game Cell", for: indexPath) as! GameViewCell
+        cell.render(with: game)
+        return cell
+    }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if !searchText.isEmpty {
+            //$0 es como el it en android
+            //otra forma de escribirlo:
+            //gameList = originalGameList.filter {game in
+            //game.title.lowercased().contains(searchText.lowercased()) }"
+            gameList = originalGameList.filter { $0.title.lowercased().contains(searchText.lowercased()) }
+            
+            tableView.reloadData()
+        }else {
+            gameList = originalGameList
+            
+        }
+        tableView.reloadData()
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        gameList = originalGameList
+        tableView.reloadData()
+    }
+    
 
 
 }
