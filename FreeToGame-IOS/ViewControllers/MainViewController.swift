@@ -24,7 +24,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UISearchBarDe
         searchController.searchBar.placeholder = "Search Game..."
         navigationItem.searchController = searchController
         
-        //llamada a la api
+        //llamada a la api, hay que llamarla con await por que es una funcion asincrona
         Task {
             originalGameList = await GameService.getGamesList()
             gameList = originalGameList
@@ -33,12 +33,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UISearchBarDe
             }
         }
     }
+    //funcion que dice el numero de filas que hay
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return gameList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let game = gameList[indexPath.row]                                                      // el "as" es como decirle que lo vea como                                                                                      un GameViewCell no como un tableView
+        let game = gameList[indexPath.row]                                         // el "as" es como decirle que lo vea como                                                                                      un GameViewCell no como un tableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "Game Cell", for: indexPath) as! GameViewCell
         cell.render(with: game)
         return cell
