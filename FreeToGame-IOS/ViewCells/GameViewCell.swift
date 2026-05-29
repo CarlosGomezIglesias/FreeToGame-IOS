@@ -10,6 +10,9 @@ import UIKit
 class GameViewCell: UITableViewCell {
     
     @IBOutlet weak var thumbnailImageView: UIImageView!
+    @IBOutlet weak var browserImageView: UIImageView!
+    @IBOutlet weak var desktopImageView: UIImageView!
+
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var genreLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
@@ -23,6 +26,11 @@ class GameViewCell: UITableViewCell {
         descriptionLabel.text = game.shortDescription
         thumbnailImageView.loadFrom(url: game.thumbnail)
         genreLabel.text = game.genre
+        //si no contiene alguna de ambas que esconda esa imagen
+        browserImageView.isHidden = !game.platform.contains("Web Browser")
+        desktopImageView.isHidden = !game.platform.contains("PC (Windows)")
+            
+        
     }
     //solo se ejecuta cuando se crea la celda
     override func awakeFromNib() {
