@@ -28,6 +28,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UISearchBarDe
         Task {
             originalGameList = await GameService.getGamesList()
             gameList = originalGameList
+            
+            //le decimos que lo pase al hilo pricipal y recargue los datos
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -62,6 +64,16 @@ class MainViewController: UIViewController, UITableViewDataSource, UISearchBarDe
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         gameList = originalGameList
         tableView.reloadData()
+    }
+    //funcion para preparar los datos para mandar al detalle
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        let detailViewController = segue.destination as! DetailViewController
+        //creamos variable de la celda pulsada
+        let IndexPath = tableView.indexPathForSelectedRow!
+        detailViewController.game = gameList[IndexPath.row]
+        //para deselecionar la celda pulsada
+        tableView.deselectRow(at: IndexPath, animated: true)
     }
     
 

@@ -64,8 +64,14 @@ class GameViewCell: UITableViewCell {
             // Configure the view for the selected state
         //le decimos al fondo que tenga color blanco o negro (depende del modo dark o normal)
         contentView.backgroundColor = .systemBackground
-        //cuando se selecciones la card se pone de ese color
-        selectionView.backgroundColor = selected ? .separator : .clear
+        
+        let changes = {
+            //cuando se selecciones la card se pone de ese color
+            self.selectionView.backgroundColor = selected ? .separator : .clear
+        }
+        //le decimos cuanto dura la animacion
+        UIView.animate(withDuration: 0.25, animations: changes)
+        
     }
 
 }
